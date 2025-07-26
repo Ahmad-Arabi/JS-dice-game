@@ -167,9 +167,16 @@ main {
 }
 
 @media screen and (max-width: 440px) {
+  html {
+    font-size: 42.5%;
+  }
   main {
     flex-direction: column;
-    height: 100%;
+    height: 100vh;
+    width: 100vw;
+  }
+  .player {
+    height: 50vh;
   }
 
   .player--1 {
@@ -177,8 +184,8 @@ main {
   }
 
   .dice {
-    top: 45%;
-    left: 75%;
+    top: 45vh;
+    left: 75vw;
     height: 10rem;
   }
 
@@ -186,11 +193,47 @@ main {
     top: 2rem;
   }
   .btn--roll {
-    top: 45%;
-    left: 25%;
+    top: 45vh;
+    left: 25vw;
   }
   .btn--hold {
-    top: 51%;
-    left: 25%;
+    top: 51vh;
+    left: 25vw;
+  }
+
+  .btn {
+    font-size: 2.5rem;
+  }
+}
+
+@media screen and (max-width: 390px) {
+  html {
+    font-size: 42.5%;
+  }
+
+  .player {
+    height: 25vh;
+  }
+
+  .dice {
+    top: 45vh;
+    left: 75vw;
+    height: 10rem;
+  }
+
+  .btn {
+    font-size: 2.5rem;
+  }
+
+  .btn--new {
+    top: 2rem;
+  }
+  .btn--roll {
+    top: 44vh;
+    left: 25vw;
+  }
+  .btn--hold {
+    top: 52vh;
+    left: 25vw;
   }
 }
