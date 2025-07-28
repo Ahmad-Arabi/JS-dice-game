@@ -1,40 +1,64 @@
 'use strict';
-//initial values
-let totalScore = [0, 0];
-let currentScore = 0;
-let activePlayer = 0;
-let winner;
 
+//UI elements for players
 const playerCard0 = document.querySelector(`.player--0`);
 const playerCard1 = document.querySelector(`.player--1`);
-
 const playerNameEl = function (player, name) {
   document.getElementById(`name--${player}`).textContent = name;
 };
-
 const totalScoreEl = function (player, value) {
   document.getElementById(`score--${player}`).textContent = value;
 };
-
 const currentScoreEl = function (player, value) {
   document.getElementById(`current--${player}`).textContent = value;
 };
 
+//adjust UI for winner
 const declareWinner = (playerCard, playerNameId) => {
+  playerCard.classList.remove('player--active');
+  const otherPlayerCard =
+    playerCard === playerCard1 ? playerCard0 : playerCard1;
+  otherPlayerCard.classList.remove('player--active');
   playerCard.classList.toggle('player--winner');
   diceRollBtn.classList.toggle('hidden');
   holdBtn.classList.toggle('hidden');
   document.getElementById(playerNameId).textContent = '🎉 You won!';
 };
 
-//buttons & dice
+//buttons & dice UI elements
 const diceRollBtn = document.querySelector('.btn--roll');
 const holdBtn = document.querySelector('.btn--hold');
 const newGameBtn = document.querySelector('.btn--new');
 const dice = document.querySelector('.dice');
 
-//hide dice at the start
-dice.classList.add('hidden');
+//initial values
+let totalScore, currentScore, activePlayer, winner;
+
+// Starting conditions
+const init = function () {
+  totalScore = [0, 0];
+  currentScore = 0;
+  activePlayer = 0;
+
+  for (let player = 0; player < 2; player++) {
+    currentScoreEl(player, 0);
+    totalScoreEl(player, 0);
+    playerNameEl(player, `Player ${player + 1}`);
+  }
+
+  if (winner) winner.classList.toggle('player--winner');
+  winner = null;
+
+  dice.classList.add('hidden');
+  diceRollBtn.classList.remove('hidden');
+  holdBtn.classList.remove('hidden');
+
+  playerCard1.classList.remove('player--active');
+  playerCard0.classList.add('player--active');
+};
+
+//start the game
+init();
 
 //player switch
 const switchPlayer = function () {
@@ -80,32 +104,14 @@ holdBtn.addEventListener('click', function () {
 
 //end game
 const gameWinner = function () {
-  if (totalScore[0] >= 10) {
+  if (totalScore[0] >= 100) {
     declareWinner(playerCard0, 'name--0');
     winner = playerCard0;
-  } else if (totalScore[1] >= 10) {
+  } else if (totalScore[1] >= 100) {
     declareWinner(playerCard1, 'name--1');
     winner = playerCard1;
   }
 };
 
 //reset
-newGameBtn.addEventListener('click', function () {
-  diceRollBtn.classList.remove('hidden');
-  holdBtn.classList.remove('hidden');
-  dice.classList.add('hidden');
-  playerCard1.classList.remove('player--active');
-  playerCard0.classList.add('player--active');
-
-  totalScore = [0, 0];
-  currentScore = 0;
-
-  for (let player = 0; player < 2; player++) {
-    currentScoreEl(player, 0);
-    totalScoreEl(player, 0);
-    playerNameEl(player, `Player ${player + 1}`);
-  }
-
-  if (winner) winner.classList.toggle('player--winner');
-  winner = null;
-});
+newGameBtn.addEventListener('click', init);
