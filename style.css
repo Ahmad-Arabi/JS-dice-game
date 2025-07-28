@@ -249,4 +249,9 @@ footer {
     top: 52vh;
     left: 25vw;
   }
+
+  #score--0 {
+    margin-top: auto;
+    margin-bottom: 0;
+  }
 }

@@ -8,7 +8,26 @@ let winner;
 const playerCard0 = document.querySelector(`.player--0`);
 const playerCard1 = document.querySelector(`.player--1`);
 
-//buttons & dicea
+const playerNameEl = function (player, name) {
+  document.getElementById(`name--${player}`).textContent = name;
+};
+
+const totalScoreEl = function (player, value) {
+  document.getElementById(`score--${player}`).textContent = value;
+};
+
+const currentScoreEl = function (player, value) {
+  document.getElementById(`current--${player}`).textContent = value;
+};
+
+const declareWinner = (playerCard, playerNameId) => {
+  playerCard.classList.toggle('player--winner');
+  diceRollBtn.classList.toggle('hidden');
+  holdBtn.classList.toggle('hidden');
+  document.getElementById(playerNameId).textContent = '🎉 You won!';
+};
+
+//buttons & dice
 const diceRollBtn = document.querySelector('.btn--roll');
 const holdBtn = document.querySelector('.btn--hold');
 const newGameBtn = document.querySelector('.btn--new');
@@ -25,27 +44,20 @@ const switchPlayer = function () {
   activePlayer = activePlayer == 0 ? 1 : 0;
 };
 
-//Dice Roll functionallity
+//Dice Roll functionality
 diceRollBtn.addEventListener('click', function () {
-  //genrate random number for dice
-  const generatedDiceNumber = Math.trunc(Math.random() * 6 + 1);
-  //replae the dice image based on the generated number
-  dice.setAttribute('src', `dice-${generatedDiceNumber}.png`);
+  //generate random number for dice
+  const diceNumber = Math.trunc(Math.random() * 6 + 1);
+  //replace the dice image based on the generated number
+  dice.setAttribute('src', `dice-${diceNumber}.png`);
   //show the dice
   dice.classList.remove('hidden');
 
-  if (generatedDiceNumber != 1) {
-    currentScore += generatedDiceNumber;
-    document.getElementById(`current--${activePlayer}`).textContent =
-      currentScore;
+  if (diceNumber != 1) {
+    currentScore += diceNumber;
+    currentScoreEl(activePlayer, currentScore);
   } else {
-    //dice is 1 we reset the current value and swith player turn
-    setTimeout(() => {
-      dice.classList.add('hidden');
-    }, 1000);
-
-    document.getElementById(`current--${activePlayer}`).textContent = 0;
-
+    currentScoreEl(activePlayer, 0);
     switchPlayer();
   }
 });
@@ -54,11 +66,11 @@ diceRollBtn.addEventListener('click', function () {
 holdBtn.addEventListener('click', function () {
   if (currentScore != 0) {
     totalScore[activePlayer] += currentScore;
-    document.getElementById(`score--${activePlayer}`).textContent =
-      totalScore[activePlayer];
-    document.getElementById(`current--${activePlayer}`).textContent = 0;
+    totalScoreEl(activePlayer, totalScore[activePlayer]);
+    currentScoreEl(activePlayer, 0);
+
+    //dice is 1 we reset the current value and swicth player turn
     switchPlayer();
-    //dice is 1 we reset the current value and swith player turn
     dice.classList.add('hidden');
 
     //end game if there is winner
@@ -68,17 +80,11 @@ holdBtn.addEventListener('click', function () {
 
 //end game
 const gameWinner = function () {
-  if (totalScore[0] >= 100) {
-    playerCard0.classList.toggle('player--winner');
-    diceRollBtn.classList.toggle('hidden');
-    holdBtn.classList.toggle('hidden');
-    document.getElementById(`name--0`).textContent = '🎉 You won!';
+  if (totalScore[0] >= 10) {
+    declareWinner(playerCard0, 'name--0');
     winner = playerCard0;
-  } else if (totalScore[1] >= 100) {
-    playerCard1.classList.toggle('player--winner');
-    diceRollBtn.classList.toggle('hidden');
-    holdBtn.classList.toggle('hidden');
-    document.getElementById(`name--1`).textContent = '🎉 You won!';
+  } else if (totalScore[1] >= 10) {
+    declareWinner(playerCard1, 'name--1');
     winner = playerCard1;
   }
 };
@@ -90,19 +96,16 @@ newGameBtn.addEventListener('click', function () {
   dice.classList.add('hidden');
   playerCard1.classList.remove('player--active');
   playerCard0.classList.add('player--active');
-  document.getElementById(`name--1`).textContent = 'Player 2';
-  document.getElementById(`name--0`).textContent = 'Player 1';
 
   totalScore = [0, 0];
   currentScore = 0;
 
   for (let player = 0; player < 2; player++) {
-    document.getElementById(`current--${player}`).textContent = 0;
-    document.getElementById(`score--${player}`).textContent = 0;
-    document.getElementById(`name--${player}`).textContent = `Player ${
-      player + 1
-    }`;
+    currentScoreEl(player, 0);
+    totalScoreEl(player, 0);
+    playerNameEl(player, `Player ${player + 1}`);
   }
 
   if (winner) winner.classList.toggle('player--winner');
+  winner = null;
 });
